@@ -1,4 +1,5 @@
 .webpack
+.serverless
 /node_modules
 /dist
 # misc
