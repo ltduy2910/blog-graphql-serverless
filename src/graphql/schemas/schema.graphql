@@ -3,9 +3,10 @@ scalar DateTime
 type Comment {
 	id: ID!
 	content: String!
-	auther: User!
+	author: User!
+	post: Post!
 	createdAt: DateTime
-	updatedsAt: DateTime
+	updatedAt: DateTime
 }
 
 type Post {
@@ -13,9 +14,10 @@ type Post {
 	title: String!
 	description: String
 	content: String!
+	author: User!
 	comments: [Comment]
 	createdAt: DateTime
-	updatedsAt: DateTime
+	updatedAt: DateTime
 }
 
 type User {
@@ -27,8 +29,68 @@ type User {
 }
 
 type Query {
-	posts(searchString: String): GetPostsResponse
-	post(postId: String!): GetPostResponse
+	users: [User]
+	posts(searchString: String): [Post]
+	post(postId: String!): Post
+}
+
+type Mutation {
+	addUser(inputUser: InputUser!): AddUserResponse
+	addPost(inputPost: InputPost): AddPostResponse
+	addComment(inputComment: InputComment): AddCommentResponse
+}
+
+input InputUser {
+	email: String!
+	name: String!
+	provider: String!
+	photoUrl: String
+}
+
+input InputPost {
+	userId: String!
+	title: String!
+	description: String
+	content: String!
+}
+
+input InputComment {
+	userId: String!
+	postId: String!
+	content: String!
+}
+
+type AddUserResponse {
+	"Similar to HTTP status code, represents the status of the mutation"
+	code: Int!
+	"Indicates whether the mutation was successful"
+	success: Boolean!
+	"Human-readable message for the UI"
+	message: String!
+	"Post'contents"
+	user: User
+}
+
+type AddPostResponse {
+	"Similar to HTTP status code, represents the status of the mutation"
+	code: Int!
+	"Indicates whether the mutation was successful"
+	success: Boolean!
+	"Human-readable message for the UI"
+	message: String!
+	"Added post"
+	post: Post
+}
+
+type AddCommentResponse {
+	"Similar to HTTP status code, represents the status of the mutation"
+	code: Int!
+	"Indicates whether the mutation was successful"
+	success: Boolean!
+	"Human-readable message for the UI"
+	message: String!
+	"Added post"
+	comment: Comment
 }
 
 type GetPostResponse {

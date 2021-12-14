@@ -7,7 +7,7 @@ const PostSchema = new mongoose.Schema(
     content: { type: String, required: true },
     author: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
+      ref: 'User',
     },
     comments: [
       {
@@ -21,5 +21,7 @@ const PostSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+PostSchema.index({ title: "text", content: "text" }, { weights: { title: 5, body: 3, } })
+
 export default PostSchema
 
