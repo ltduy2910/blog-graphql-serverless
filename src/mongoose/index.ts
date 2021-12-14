@@ -10,6 +10,7 @@ const env = process.env.NODE_ENV || "development";
 const prodMongoURL = `mongodb+srv://${environment.mongodb.user}:${environment.mongodb.password}@${environment.mongodb.uri}/${environment.mongodb.dbName}?retryWrites=true&w=majority`
 const mongoURL = env === 'development' ? `mongodb://localhost:27017/${environment.mongodb.dbName}` : prodMongoURL;
 
+// Connet to MongoDB
 mongoose.connect(mongoURL).then(() => {
   console.log('Connected to MongoDb');
 }).catch((err: Error) => {

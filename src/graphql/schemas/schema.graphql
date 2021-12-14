@@ -2,8 +2,11 @@ scalar DateTime
 
 type Comment {
 	id: ID!
+	"Content of comment"
 	content: String!
+	"Author of comment"
 	author: User!
+	"Post in which comment is"
 	post: Post!
 	createdAt: DateTime
 	updatedAt: DateTime
@@ -11,10 +14,15 @@ type Comment {
 
 type Post {
 	id: ID!
+	"Title of blog post"
 	title: String!
+	"Short descrition of blog post"
 	description: String
+	"Full content of blog post"
 	content: String!
+	"Author of blog post"
 	author: User!
+	"List of comments on this post"
 	comments: [Comment]
 	createdAt: DateTime
 	updatedAt: DateTime
@@ -22,41 +30,74 @@ type Post {
 
 type User {
 	id: ID!
+	"Email of a user"
 	email: String
+	"Display name of user"
 	name: String
+	"Authen provider"
 	provider: String
+	"Link of avatar"
 	photoUrl: String
 }
 
 type Query {
+	"Get all users"
 	users: [User]
+	"Get all posts, can use to search also"
 	posts(searchString: String): [Post]
+	"Get detail information of a post, includes author, comments"
 	post(postId: String!): Post
 }
 
 type Mutation {
+	"Use to add user to system"
 	addUser(inputUser: InputUser!): AddUserResponse
-	addPost(inputPost: InputPost): AddPostResponse
+	"Use to add post to system"
+	addPost(inputPost: InputPost!): MutationPostResponse
+	"Update information of current post"
+	updatePost(inputUpdatePost: InputUpdatePost!): MutationPostResponse
+	"Delete post from system"
+	delete(postId: String!): MutationPostResponse
+	"Use to add comment to a post"
 	addComment(inputComment: InputComment): AddCommentResponse
 }
 
 input InputUser {
+	"Email of logged user"
 	email: String!
+	"Display name of user"
 	name: String!
+	"Authen provider"
 	provider: String!
+	"Link of avatar"
 	photoUrl: String
 }
 
 input InputPost {
 	userId: String!
+	"Title of blog"
 	title: String!
+	"Short description of blog post"
 	description: String
+	"Full content of blog post"
+	content: String!
+}
+
+input InputUpdatePost {
+	postId: String!
+	"Title of blog"
+	title: String!
+	"Short description of blog post"
+	description: String
+	"Full content of blog post"
 	content: String!
 }
 
 input InputComment {
 	userId: String!
+	"Id of current post"
 	postId: String!
+	"Content of comment"
 	content: String!
 }
 
@@ -67,18 +108,18 @@ type AddUserResponse {
 	success: Boolean!
 	"Human-readable message for the UI"
 	message: String!
-	"Post'contents"
+	"Added user"
 	user: User
 }
 
-type AddPostResponse {
+type MutationPostResponse {
 	"Similar to HTTP status code, represents the status of the mutation"
 	code: Int!
 	"Indicates whether the mutation was successful"
 	success: Boolean!
 	"Human-readable message for the UI"
 	message: String!
-	"Added post"
+	"Post object"
 	post: Post
 }
 
@@ -89,7 +130,7 @@ type AddCommentResponse {
 	success: Boolean!
 	"Human-readable message for the UI"
 	message: String!
-	"Added post"
+	"Added comment"
 	comment: Comment
 }
 

@@ -2,9 +2,11 @@ import { GraphQLResolveInfo } from 'graphql';
 import { IResolvers } from '@graphql-tools/utils';
 import Context from '../../mongoose/schema/context';
 import { CommentModel, PostModel, UserModel } from '../../mongoose';
+import { ApolloError } from 'apollo-server-lambda';
 
 const resolvers: IResolvers = {
   Query: {
+    // Get all users query
     users: async (_root: void, _args: any, { userLoader: userLoader }) => {
       // Our loader can't get all users, so let's use the model directly here
       const allUsers = await UserModel.find({})
@@ -15,6 +17,7 @@ const resolvers: IResolvers = {
       // and finally return the result
       return allUsers
     },
+    // Get all posts query, be able to search with title, content
     posts: async (_root: void, { searchString }, { postLoader: postLoader }, _info: GraphQLResolveInfo) => {
       try {
         const searchObject = searchString ?
@@ -33,6 +36,7 @@ const resolvers: IResolvers = {
         console.log("error", error)
       }
     },
+    // Get post detail query
     post: async (_root: void, { postId }: { postId: string }, _ctx: Context, _info: GraphQLResolveInfo) => {
       try {
         const post = await PostModel.findById(postId).populate({
@@ -53,6 +57,7 @@ const resolvers: IResolvers = {
     },
   },
   Mutation: {
+    // Add new user mutation
     addUser: async (_root: void, { inputUser }: any, _ctx: Context) => {
       try {
         console.log(inputUser)
@@ -72,6 +77,7 @@ const resolvers: IResolvers = {
         }
       }
     },
+    // Add post mutation
     addPost: async (_root: void, { inputPost }: any, _ctx: Context) => {
       try {
         1
@@ -93,6 +99,52 @@ const resolvers: IResolvers = {
         }
       }
     },
+    // Update Post mutation
+    updatePost: async (_root: void, { inputUpdatePost }: any, _ctx: Context) => {
+      try {
+        1
+        const { postId, content, title, description } = inputUpdatePost
+        const post = await PostModel.findByIdAndUpdate(postId, { content: content, title: title, description: description })
+
+        return {
+          code: 200,
+          success: true,
+          message: "Updated post successfully.",
+          post: post
+        }
+      } catch (error) {
+        return {
+          code: 500,
+          success: false,
+          message: error as string,
+          post: null
+        }
+      }
+    },
+    // Delete post mutation
+    delete: async (_root: void, { postId }: any, _ctx: Context) => {
+      try {
+        const post = await PostModel.findByIdAndDelete(postId)
+        await CommentModel.deleteMany({ post: { _id: postId } })
+        if (!post) {
+          throw new ApolloError("Record doesn't exist in database")
+        }
+        return {
+          code: 200,
+          success: true,
+          message: "Updated post successfully.",
+          post: post
+        }
+      } catch (error) {
+        return {
+          code: 500,
+          success: false,
+          message: error as string,
+          post: null
+        }
+      }
+    },
+    // Add comment mutation
     addComment: async (_root: void, { inputComment }: any, _ctx: Context) => {
       try {
         const { userId, postId, content } = inputComment
