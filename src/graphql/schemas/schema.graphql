@@ -1,0 +1,53 @@
+scalar DateTime
+
+type Comment {
+	id: ID!
+	content: String!
+	auther: User!
+	createdAt: DateTime
+	updatedsAt: DateTime
+}
+
+type Post {
+	id: ID!
+	title: String!
+	description: String
+	content: String!
+	comments: [Comment]
+	createdAt: DateTime
+	updatedsAt: DateTime
+}
+
+type User {
+	id: ID!
+	email: String
+	name: String
+	provider: String
+	photoUrl: String
+}
+
+type Query {
+	posts(searchString: String): GetPostsResponse
+	post(postId: String!): GetPostResponse
+}
+
+type GetPostResponse {
+	"Similar to HTTP status code, represents the status of the mutation"
+	code: Int!
+	"Indicates whether the mutation was successful"
+	success: Boolean!
+	"Human-readable message for the UI"
+	message: String!
+	"Post'contents"
+	post: Post
+}
+type GetPostsResponse {
+	"Similar to HTTP status code, represents the status of the mutation"
+	code: Int!
+	"Indicates whether the mutation was successful"
+	success: Boolean!
+	"Human-readable message for the UI"
+	message: String!
+	"Post's array"
+	posts: [Post]
+}
