@@ -52,6 +52,8 @@ type Query {
 type Mutation {
 	"Use to add user to system"
 	addUser(inputUser: InputUser!): AddUserResponse
+	"Use to signin with auth0"
+	signinWithAuth0(inputUser: InputUser!): AddUserResponse
 	"Use to add post to system"
 	addPost(inputPost: InputPost!): MutationPostResponse
 	"Update information of current post"
@@ -74,7 +76,8 @@ input InputUser {
 }
 
 input InputPost {
-	userId: String!
+	# userId: String!
+	email: String!
 	"Title of blog"
 	title: String!
 	"Short description of blog post"
@@ -94,7 +97,8 @@ input InputUpdatePost {
 }
 
 input InputComment {
-	userId: String!
+	# userId: String!
+	email: String!
 	"Id of current post"
 	postId: String!
 	"Content of comment"

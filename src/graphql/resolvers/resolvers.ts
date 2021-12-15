@@ -77,12 +77,34 @@ const resolvers: IResolvers = {
         }
       }
     },
+    // Add new user mutation
+    signinWithAuth0: async (_root: void, { inputUser }: any, _ctx: Context) => {
+      try {
+        console.log(inputUser)
+        const user = await UserModel.update({ email: inputUser.email }, { ...inputUser }, { upsert: true })
+        return {
+          code: 200,
+          success: true,
+          message: "Signed in successfully.",
+          user: user
+        }
+      } catch (error) {
+        return {
+          code: 500,
+          success: false,
+          message: error as string,
+          post: null
+        }
+      }
+    },
     // Add post mutation
     addPost: async (_root: void, { inputPost }: any, _ctx: Context) => {
       try {
         1
-        const { userId } = inputPost
-        const user = await UserModel.findById(userId)
+        const { email } = inputPost
+        const user = await UserModel.findOne({
+          email: email
+        })
         const post = await PostModel.create({ author: user, ...inputPost })
         return {
           code: 200,
@@ -147,8 +169,10 @@ const resolvers: IResolvers = {
     // Add comment mutation
     addComment: async (_root: void, { inputComment }: any, _ctx: Context) => {
       try {
-        const { userId, postId, content } = inputComment
-        const user = await UserModel.findById(userId)
+        const { email, postId, content } = inputComment
+        const user = await UserModel.findOne({
+          email: email
+        })
         const post = await PostModel.findById(postId)
         const comment = await CommentModel.create({
           content: content,
