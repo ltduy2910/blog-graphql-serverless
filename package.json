@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"apollo-datasource-mongodb": "^0.5.2",
-		"apollo-server-lambda": "^3.5.0",
+		"apollo-server-lambda": "^3.11.1",
 		"dataloader": "^2.0.0",
 		"graphql": "^16.1.0",
 		"graphql-scalars": "^1.14.1",
