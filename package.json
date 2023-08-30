@@ -15,7 +15,7 @@
 		"graphql": "^16.1.0",
 		"graphql-scalars": "^1.14.1",
 		"moment": "^2.29.1",
-		"mongodb": "^4.2.2"
+		"mongodb": "^4.17.0"
 	},
 	"devDependencies": {
 		"serverless-dotenv-plugin": "^3.10.0",
